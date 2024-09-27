@@ -12,38 +12,24 @@
 #include <unordered_map> 
 using namespace std;
  
-long long result(vector<long long>&temp, int index, bool flag,vector<vector<long long>>&dp){
-    if(index == temp.size()-1){
- 
-        if(flag == true){
-            return -temp[index];
+string solve(string &st1, string &st2){
+    if(st1[0] != st2[0]){
+        return "NO";
+    }
+    for(int i = 1; i<st1.length(); i++){
+        if(st1[i] == st2[i]){
+            continue;
         }
         else{
-            return temp[index];
+            if(st2[i] == '1' && (st1[i] != st1[i-1])){
+                return "NO";
+            }
+            if(st2[i] == '0' && (st1[i] == st1[i-1])){
+                return "NO";
+            }
         }
     }
-    if(dp[index][flag] != -1){
-        return dp[index][flag];
-    }
- 
-    long long with = 0;
-    long long without = 0;
- 
-    if(flag == false){
-        with = temp[index] + result(temp,index+1,flag,dp);
-        without = (-temp[index])+ result(temp,index+1,true,dp);
-    }
-    if(flag == true){
-        with = (-temp[index]) + result(temp,index+1,false,dp);
-        without = (temp[index]) + result(temp,index+1,true,dp);
-    }
- 
-    return dp[index][flag] =  max(with,without);
-}
-long long solve(vector<long long>&temp){
-    int n = temp.size();
-    vector<vector<long long>> dp(n+1,vector<long long>(2,-1));
-    return result(temp,0,false,dp);
+    return "YES";
 }
  
 int main() {
@@ -54,14 +40,20 @@ int main() {
     for(int i = 0; i<n; i++){
         long long a;
         cin>>a;
-        vector<long long> temp;
+        string st1 = "";
+        string st2 = "";
         for(int j = 0; j<a; j++){
-            long long b;
-            cin>>b;
-            temp.push_back(b);
+            char ch;
+            cin>>ch;
+            st1 += ch;
         }
- 
-        cout<<solve(temp)<<endl;
+        for(int j = 0; j<a; j++){
+            char ch;
+            cin>>ch;
+            st2 += ch;
+        }
+
+        cout<<solve(st1,st2)<<endl;
     }
     
 }
