@@ -12,24 +12,61 @@
 #include <unordered_map> 
 using namespace std;
  
-string solve(string &st1, string &st2){
-    if(st1[0] != st2[0] && st2[0]=='1'){
+string solve(vector<vector<char>>&matrix){
+    int firstwhite = 0;
+    int firstblack = 0;
+    int lastwhite = 0;
+    int lastblack = 0;
+    int firstcolwhite = 0;
+    int lastcolwhite = 0;
+    int firstcolblack = 0;
+    int lastcolblack = 0;
+    int n = matrix.size();
+    int m = matrix[0].size();
+    if(n == 1 && matrix[0][0] != matrix[0][m-1]){
         return "NO";
     }
-    bool flag = false;
-    if(st1[0] == '1'){
-        flag = true;
+    else if(m == 1 && matrix[0][0] != matrix[n-1][0]){
+        return "NO";
     }
-    for(int i = 1; i<st1.length(); i++){
-        if(st1[i] == '1'){
-            flag = true;
+    if((matrix[0][0] == matrix[n-1][m-1]) || (matrix[0][m-1] == matrix[n-1][0])){
+        return "YES";
+    }
+
+    for(int i = 0; i<matrix[0].size(); i++){
+        if(matrix[0][i] == 'W'){
+            firstwhite++;
         }
-        if(st1[i] == '0' && st2[i] == '1' && flag == false){
-            return "NO";
+        else if(matrix[0][i] == 'B') {
+            firstblack++;
+        }
+        if(matrix[n-1][i] == 'W'){
+            lastwhite++;
+        }
+        else if(matrix[n-1][i] == 'B') {
+            lastblack++;
         }
     }
     
-    return "YES";
+    for(int i = 0; i<matrix.size(); i++){
+        if(matrix[i][0] == 'W'){
+            firstcolwhite++;
+        }
+        else if(matrix[i][0] == 'B'){
+            firstcolblack++;
+        }
+        if(matrix[i][m-1] == 'W'){
+            lastcolwhite++;
+        }
+        else if(matrix[i][m-1] =='B'){
+            lastcolblack++;
+        }
+    }
+    if(((lastwhite>0 && lastblack>0)  || (firstblack>0 && firstwhite>0)) && 
+    ((lastcolblack>0 && lastcolwhite>0) || (firstcolblack>0 && firstcolwhite>0))){
+        return "YES";
+    }
+    return "NO";
 }
  
 int main() {
@@ -38,22 +75,23 @@ int main() {
     cin>>n;
     
     for(int i = 0; i<n; i++){
-        long long a;
+        long long a,b;
         cin>>a;
-        string st1 = "";
-        string st2 = "";
+        cin>>b;
+        vector<vector<char>> matrix;
         for(int j = 0; j<a; j++){
-            char ch;
-            cin>>ch;
-            st1 += ch;
-        }
-        for(int j = 0; j<a; j++){
-            char ch;
-            cin>>ch;
-            st2 += ch;
+            vector<char> temp;
+            for(int k = 0; k<b; k++){
+                char ch;
+                cin>>ch;
+                temp.push_back(ch);
+            }
+            matrix.push_back(temp);
         }
 
-        cout<<solve(st1,st2)<<endl;
+        cout<<solve(matrix)<<endl;
     }
+   
+    
     
 }
