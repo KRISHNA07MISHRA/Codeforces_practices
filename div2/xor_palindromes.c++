@@ -11,75 +11,30 @@
 #include <limits.h>      
 #include <unordered_map> 
 using namespace std;
-
-string solve(string st){
-    string ans = "";
-
-    int totalpair = st.length()/2;
-    int defactive = 0;
-    int i = 0;
-    int j = st.length()-1;
-    while(i<j){
-        if(st[i] != st[j]){
-            defactive++;
-        }
-        i++;
-        j--;
+bool check(long long a){
+    long long val = sqrt(a);
+    if(val*val == a){
+        return true;
     }
-
-    int maxione = (totalpair-defactive)*2;
-
-    int k = 0;
-    while(k<defactive){
-        ans += '0';
-        k++;
+    return false;
+}
+long long solve(long long a){
+    if(check(a)){
+        return sqrt(a)*2;
     }
-    if(st.length()%2 == 1){
-        while(k<=(st.length()-defactive)){
-                ans += '1';
-                k++;
-        }
-        while(k<=st.length()){
-            ans += '0';
-            k++;
-        }
-    }
-    else{
-        while(k<=(st.length()-defactive)){
-                ans += '1';
-                k++;
-                if(k<=st.length()){
-                    ans += '0';
-                    k++;
-                }
-                else{
-                    break;
-                }
-        }
-        while(k<=st.length()){
-            ans += '0';
-            k++;
-        }
+   
+    long long upper = sqrt(a)+1;
 
+    long long lower = sqrt(a);
+    if((upper*lower)>=a){
+        return upper+lower;
     }
-    return ans;
-    
-
+    return upper+lower+1;
 }
 
 int main() {
-    int t;
+    long long t;
     cin >> t;
     
-    for(int i = 0; i<t; i++){
-        int a;
-        cin>>a;
-        string st = "";
-        for(int j = 0; j<a; j++){
-            char b;
-            cin>>b;
-            st += b;
-        }
-        cout<<solve(st)<<endl;
-    }
+    cout<<solve(t)<<endl;
 }
