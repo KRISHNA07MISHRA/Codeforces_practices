@@ -14,63 +14,57 @@
 #include <unordered_map> 
 using namespace std;
 
-vector<long long> solve(vector<long long>&arr){
-    unordered_map<long long,long long> mp;
-    for(int i = 0; i<arr.size(); i++){
-        mp[i] = arr[i];
-    }
-    vector<long long> temp = arr;
-    sort(temp.begin(),temp.end());
-    long long  prevsum = 0;
-    
-    unordered_map<long long,long long> result;
-    int i = 0;
-    int j = i+1;
-    while(i<temp.size()-1){
-        
-        long long curr = prevsum + temp[i];
-        
-        while(curr>temp[j] && j<temp.size()){
-            curr += temp[j];
-            j++;
+long long solve(vector<long long>&first, long long b){
+
+    sort(first.begin(),first.end());
+    long long s = 0;
+    long long e = INT_MAX;
+
+    long long ans = s;
+    while(s<=e){
+        long long mid = s+(e-s)/2;
+        long long req = 0;
+        for(int i = 0; i<first.size(); i++){
             
+            if(mid>first[i]){
+                req += mid-first[i];
+            }
         }
-        long long kri = i + (j-i)-1;
-        result[temp[i]] = kri;
-        prevsum += temp[i];
-        i++;
-        if(i == j){
-            j++;
+        if(b>=req){
+           
+            ans = mid;
+            s = mid+1;
         }
+        else{
+            e = mid-1;
+        }
+
     }
-    result[temp[temp.size()-1]] = temp.size()-1;
-    vector<long long> varsha;
-    for(int i = 0; i<arr.size(); i++){
-        varsha.push_back(result[mp[i]]);
-    }
-    return varsha;
+    return ans;
 
 }
 
 int main() {
-    long long n;
-    cin>>n;
-    for(int i = 0; i<n; i++){
+    int n;
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
         long long a,b;
-        cin>>a;
+        cin >> a;
+        cin>>b;
+        vector<long long> first;
+        //vector<long long> second;
         
-        vector<long long> second;
-       
-        for(int j = 0; j<a; j++){
+        for (int j = 0; j < a; j++) {
             long long c;
             cin>>c;
-            second.push_back(c);
+            first.push_back(c);
         }
+        
+        cout<<solve(first,b)<<endl;
 
-        vector<long long> ans = solve(second);
-        for(int i = 0; i<ans.size(); i++){
-            cout<<ans[i]<<" ";
-        }
-        cout<<endl;
+       
     }
+
+    return 0;
 }
