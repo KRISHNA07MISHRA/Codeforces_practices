@@ -1,1 +1,1 @@
-val-1
+maxBeautifulSegments

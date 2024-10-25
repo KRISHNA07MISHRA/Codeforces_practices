@@ -10,93 +10,135 @@
 #include <limits>
 #include <limits.h>      
 #include <unordered_map> 
+#include<map>
 using namespace std;
- 
- 
- 
-// long long solve(int n, vector<long long>& a) {
-//     if (n == 1 || n == 2) {
-//         // Impossible to have more than half unhappy if n <= 2
-//         return -1;
-//     }
- 
-//     // Calculate the total wealth
-//     double total_sum = 0;
-//     for (int i = 0; i < n; ++i) {
-//         total_sum += a[i];
-//     }
- 
-//     // Sort the wealth array
-//     sort(a.begin(), a.end());
- 
-//     double mid = a.size()/2;
-//     double target = a[mid];
- 
-//     double abhi_kya_ha_averge = (total_sum/a.size())/2;
-    
-//     double safe = total_sum;
-//     while(abhi_kya_ha_averge<=target){
-//         total_sum++;
-//         abhi_kya_ha_averge = (total_sum/a.size())/2;
-//     }
- 
-//     return total_sum-safe;
-// }
- 
-int solve(string &temp){
-    stack<int> st;
-    int i = 0;
-    int sum = 0;
-    while(i<temp.length()){
-        if(temp[i] == '('){
-            st.push(i);
-        }
-        else if(!st.empty() && temp[i] == ')' ){
-            sum += abs(st.top()-i);
-            st.pop();
-        }
-        else if(temp[i] == '_' && st.size() == 0){
-            st.push(i);
-        }
-        else if (temp[i] == '_' && !st.empty()){
-            sum += abs(st.top()-i);
-            st.pop();
-        }
-        i++;
+long long solve(vector<long long>& arr){
+    long long count = 0;
+    vector<long long> brr;
+    for(int i = 0; i<arr.size(); i++){
+        brr.push_back(arr[i]);
     }
-    return sum;
+    for(int i = 1; i<=arr.size()/2; i++){
+        if( arr[i-1] != arr[i]){
+            continue;
+        }
+        else{
+            long long rep = arr[(arr.size()-1)-i];
+            long long val = arr[i];
+            if( rep != arr[i]){
+                swap(arr[(arr.size()-1)-i],arr[i]);
+            }
+            // else if(i != 0 && rep != arr[i-1] && rep != arr[i+1] && rep != arr[i]){
+            //     swap(arr[arr.size()-1-i],arr[i]);
+            // }
+            
+        }
+    }
+    for(int i = 0; i<arr.size()-1; i++){
+        if(arr[i] == arr[i+1]){
+            count++;
+        }
+    }
+    for(int i = brr.size()-2; i>=brr.size()/2; i--){
+        if(brr[i] != brr[i+1]){
+            continue;
+        }
+        else{
+            long long rep =  brr[(brr.size()-1)-i];
+            long long val = brr[i];
+            if(rep != val){
+                swap(brr[(brr.size()-1)-i],brr[i]);
+            }
+        }
+    }
+    long long count2 = 0;
+    for(int i = 0; i<brr.size()-1; i++){
+        if(brr[i] == brr[i+1]){
+            count2++;
+        }
+    }
+    return min(count,count2);
 }
+long long  maxBeautifulSegments(vector<long long>& arr) {
+    long long sum = 0;
+    long long count = 0;
+    map<long long, int> prefixSumMap;
+
+    // Initialize with prefix sum 0 to handle segments starting from the beginning
+    prefixSumMap[0] = 1; 
+
+    for (int i = 0; i < arr.size(); i++) {
+        sum += arr[i];
+
+        // If the prefix sum has been seen before, it means we found a beautiful segment
+        if (prefixSumMap[sum]) {
+            count++;
+            // Reset the map for non-overlapping segments
+            prefixSumMap.clear();
+            // Reinitialize to start new segment tracking
+            prefixSumMap[0] = 1;
+            sum = 0;
+        }
+
+        // Mark current prefix sum
+        prefixSumMap[sum]++;
+    }
+
+    return count;
+}
+int minimum_magic(vector<vector<int>>& matrix, int n) {
+    int magic_count = 0;
+
+    // Traverse along the diagonals from top-left to bottom-right
+    for (int diag = 0; diag < n; ++diag) {
+        int i = 0;       // Start row
+        int j = diag;    // Start column
+
+        while (i < n && j < n) {
+            if (matrix[i][j] < 0) {
+                // Amount of magic needed to make the diagonal element non-negative
+                int needed_magic = -matrix[i][j];
+                magic_count += needed_magic;
+
+                // Apply this magic to the diagonal from (i,j) to the end of this diagonal
+                int temp_i = i, temp_j = j;
+                while (temp_i < n && temp_j < n) {
+                    matrix[temp_i][temp_j] += needed_magic;
+                    temp_i++;
+                    temp_j++;
+                }
+            }
+
+            i++;
+            j++;
+        }
+    }
+
+    return magic_count;
+}
+
 int main() {
-    // int t;
-    // cin >> t;
-    // while (t--) {
-    //     int n;
-    //     cin >> n;
-    //     vector<long long> a(n);
- 
-    //     for (int i = 0; i < n; ++i) {
-    //         cin >> a[i];
+    // long long n;
+    // cin>>n;
+    // for(int i = 0; i<n; i++){
+    //     long long a;
+    //     cin>>a;
+    //     vector<long long> temp;
+    //     for(int j = 0; j<a; j++){
+    //         long long b;
+    //         cin>>b;
+    //         temp.push_back(b);
     //     }
- 
-    //     cout << solve(n, a) << endl;
+    //     cout<<solve(temp)<<endl;
     // }
-    // return 0;
- 
- 
- 
- 
+
     int n;
     cin>>n;
     for(int i = 0; i<n; i++){
-        int a;
-        cin>>a;
-        string st = "";
-        for(int j = 0; j<a; j++){
-            char ch ;
-            cin>>ch;
-            st += ch;
-        }
- 
+        string st;
+        cin>>st;
         cout<<solve(st)<<endl;
     }
+    
+    return 0;
 }
